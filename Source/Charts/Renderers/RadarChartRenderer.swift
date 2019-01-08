@@ -313,6 +313,26 @@ open class RadarChartRenderer: LineRadarRenderer
         let xIncrements = 1 + chart.skipWebLineCount
         let maxEntryCount = chart.data?.maxEntryCountSet?.entryCount ?? 0
 
+        // First find outer points
+        var outerPoints = [CGPoint]()
+        for i in stride(from: 0, to: maxEntryCount, by: xIncrements) {
+            let p = center.moving(distance: CGFloat(chart.yRange) * factor,
+                                  atAngle: sliceangle * CGFloat(i) + rotationangle)
+            outerPoints.append(CGPoint(x: p.x, y: p.y))
+        }
+        // Draw the polygon behind.. useful for the fil
+        let polygonPath = UIBezierPath()
+        polygonPath.move(to: outerPoints[0])
+        _ = outerPoints.remove(at: 0)
+        outerPoints.forEach {
+            polygonPath.addLine(to: $0)
+        }
+        polygonPath.close()
+        chart.webBackgroundColour.setFill()
+        polygonPath.fill()
+        
+        
+        // Now do the same again and draw the web - I did like this quick and dirty, because didn't have time to figure this out, but basically its to draw the web background below the web
         for i in stride(from: 0, to: maxEntryCount, by: xIncrements)
         {
             let p = center.moving(distance: CGFloat(chart.yRange) * factor,
@@ -325,6 +345,9 @@ open class RadarChartRenderer: LineRadarRenderer
             
             context.strokeLineSegments(between: _webLineSegmentsBuffer)
         }
+        
+        
+        
         
         // draw the inner-web
         context.setLineWidth(chart.innerWebLineWidth)

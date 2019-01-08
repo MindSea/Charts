@@ -17,6 +17,10 @@ import CoreGraphics
 /// when displaying 5-10 entries per DataSet.
 open class RadarChartView: PieRadarChartViewBase
 {
+    
+    /// The web background
+    @objc open var webBackgroundColour = NSUIColor.clear
+    
     /// width of the web lines that come from the center.
     @objc open var webLineWidth = CGFloat(1.5)
     
