@@ -41,6 +41,8 @@ open class XAxisRendererRadarChart: XAxisRenderer
         
         let labelFont = xAxis.labelFont
         let labelTextColor = xAxis.labelTextColor
+        let subLabelFont = xAxis.subLabelFont
+        let subLabelTextColor = xAxis.subLabelTextColor
         let labelRotationAngleRadians = xAxis.labelRotationAngle.RAD2DEG
         let drawLabelAnchor = CGPoint(x: 0.5, y: 0.25)
         
@@ -60,11 +62,27 @@ open class XAxisRendererRadarChart: XAxisRenderer
             
             let p = center.moving(distance: CGFloat(chart.yRange) * factor + xAxis.labelRotatedWidth / 2.0, atAngle: angle)
             
+            let x = p.x
+            var y = p.y
+            
             drawLabel(context: context,
                       formattedLabel: label,
-                      x: p.x,
-                      y: p.y - xAxis.labelRotatedHeight / 2.0,
+                      x: x,
+                      y: y - xAxis.labelRotatedHeight / 2.0,
                       attributes: [NSAttributedString.Key.font: labelFont, NSAttributedString.Key.foregroundColor: labelTextColor],
+                      anchor: drawLabelAnchor,
+                      angleRadians: labelRotationAngleRadians)
+            
+            // drop lower
+            y += 20
+            let subLabel = xAxis.valueFormatter?.subStringForValue?(Double(i), axis: xAxis) ?? ""
+            let subColor = xAxis.valueFormatter?.subStringColorForValue?(Double(i), axis: xAxis) ?? subLabelTextColor
+            
+            drawLabel(context: context,
+                      formattedLabel: subLabel,
+                      x: x,
+                      y: y - xAxis.labelRotatedHeight / 2.0,
+                      attributes: [NSAttributedString.Key.font: subLabelFont, NSAttributedString.Key.foregroundColor: subColor],
                       anchor: drawLabelAnchor,
                       angleRadians: labelRotationAngleRadians)
         }

@@ -343,11 +343,12 @@ open class RadarChartRenderer: LineRadarRenderer
             _webLineSegmentsBuffer[1].x = p.x
             _webLineSegmentsBuffer[1].y = p.y
             
+            context.setLineDash(phase: 0, lengths: [4, 4])
             context.strokeLineSegments(between: _webLineSegmentsBuffer)
         }
         
-        
-        
+        // Reset the line dash
+        context.setLineDash(phase: 0, lengths: [])
         
         // draw the inner-web
         context.setLineWidth(chart.innerWebLineWidth)

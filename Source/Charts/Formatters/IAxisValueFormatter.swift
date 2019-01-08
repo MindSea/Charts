@@ -27,4 +27,11 @@ public protocol IAxisValueFormatter: class
     func stringForValue(_ value: Double,
                         axis: AxisBase?) -> String
     
+    
+    @objc optional func subStringForValue(_ value: Double,
+                                    axis: AxisBase?) -> String
+    
+    @objc optional func subStringColorForValue(_ value: Double,
+                                          axis: AxisBase?) -> UIColor?
+    
 }
