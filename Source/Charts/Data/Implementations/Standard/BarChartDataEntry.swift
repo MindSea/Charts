@@ -13,6 +13,9 @@ import Foundation
 
 open class BarChartDataEntry: ChartDataEntry
 {
+    /// Bar starting point
+    public let yStart: Double?
+
     /// the values the stacked barchart holds
     private var _yVals: [Double]?
     
@@ -27,12 +30,48 @@ open class BarChartDataEntry: ChartDataEntry
     
     public required init()
     {
+        self.yStart = nil
         super.init()
     }
-    
+
+    /// Constructor for normal bars (not stacked). `yStart` will only work for vertical
+    /// bar which is not inverted and is `y >= 0`. only abs value of `yStart` is taken
+    @objc public init(x: Double, y: Double, yStart: Double)
+    {
+        self.yStart = abs(yStart)
+        if yStart > y {
+            fatalError("`yStart` cannot be greator than `y`")
+        }
+        super.init(x: x, y: y)
+    }
+
+    /// Constructor for normal bars (not stacked).
+    public convenience init(x: Double, y: Double, yStart: Double, data: Any?)
+    {
+        self.init(x: x, y: y, yStart: yStart)
+        self.data = data
+    }
+
+    /// Constructor for normal bars (not stacked).
+    public convenience init(x: Double, y: Double, yStart: Double, icon: NSUIImage?)
+    {
+        self.init(x: x, y: y, yStart: yStart)
+        self.icon = icon
+    }
+
+    /// Constructor for normal bars (not stacked).
+    public convenience init(x: Double, y: Double, yStart: Double, icon: NSUIImage?, data: Any?)
+    {
+        self.init(x: x, y: y, yStart: yStart)
+        self.icon = icon
+        self.data = data
+    }
+
+
     /// Constructor for normal bars (not stacked).
     public override init(x: Double, y: Double)
     {
+        self.yStart = nil
         super.init(x: x, y: y)
     }
     
@@ -61,6 +100,7 @@ open class BarChartDataEntry: ChartDataEntry
     /// Constructor for stacked bar entries.
     @objc public init(x: Double, yValues: [Double])
     {
+        self.yStart = nil
         super.init(x: x, y: BarChartDataEntry.calcSum(values: yValues))
         self._yVals = yValues
         calcPosNegSum()

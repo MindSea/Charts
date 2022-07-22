@@ -112,9 +112,15 @@ class BarChartViewController: DemoBaseViewController {
             let mult = range + 1
             let val = Double(arc4random_uniform(mult))
             if arc4random_uniform(100) < 25 {
-                return BarChartDataEntry(x: Double(i), y: val, icon: UIImage(named: "icon"))
+                if val > 0 {
+                    return BarChartDataEntry(x: Double(i), y: val, yStart: Double.random(in: 0..<val), icon: UIImage(named: "icon"))
+                }
+                return BarChartDataEntry(x: Double(i), y: val, yStart: 0, icon: UIImage(named: "icon"))
             } else {
-                return BarChartDataEntry(x: Double(i), y: val)
+                if val > 0 {
+                    return BarChartDataEntry(x: Double(i), y: val, yStart: Double.random(in: 0..<val))
+                }
+                return BarChartDataEntry(x: Double(i), y: val, yStart: 0)
             }
         }
         
@@ -128,6 +134,8 @@ class BarChartViewController: DemoBaseViewController {
             set1 = BarChartDataSet(entries: yVals, label: "The year 2017")
             set1.colors = ChartColorTemplates.material()
             set1.drawValuesEnabled = false
+            set1.barCornerRadius = 6
+            set1.barBorderWidth = 1
             
             let data = BarChartData(dataSet: set1)
             data.setValueFont(UIFont(name: "HelveticaNeue-Light", size: 10)!)

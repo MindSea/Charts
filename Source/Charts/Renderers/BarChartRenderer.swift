@@ -119,13 +119,23 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
             {
                 let left = CGFloat(x - barWidthHalf)
                 let right = CGFloat(x + barWidthHalf)
-                var top = isInverted
-                    ? (y <= 0.0 ? CGFloat(y) : 0)
-                    : (y >= 0.0 ? CGFloat(y) : 0)
-                var bottom = isInverted
-                    ? (y >= 0.0 ? CGFloat(y) : 0)
-                    : (y <= 0.0 ? CGFloat(y) : 0)
-                
+                var top: CGFloat
+                var bottom: CGFloat
+                if let yStart = e.yStart {
+                    top = isInverted
+                        ? (y <= 0.0 ? CGFloat(y) : 0)
+                        : (y >= 0.0 ? CGFloat(y) : 0)
+                    bottom = isInverted
+                        ? (y >= 0.0 ? CGFloat(y) : 0)
+                        : (y <= 0.0 ? CGFloat(y) : yStart)
+                } else {
+                    top = isInverted
+                        ? (y <= 0.0 ? CGFloat(y) : 0)
+                        : (y >= 0.0 ? CGFloat(y) : 0)
+                    bottom = isInverted
+                        ? (y >= 0.0 ? CGFloat(y) : 0)
+                        : (y <= 0.0 ? CGFloat(y) : 0)
+                }
                 /* When drawing each bar, the renderer actually draws each bar from 0 to the required value.
                  * This drawn bar is then clipped to the visible chart rect in BarLineChartViewBase's draw(rect:) using clipDataToContent.
                  * While this works fine when calculating the bar rects for drawing, it causes the accessibilityFrames to be oversized in some cases.
@@ -326,7 +336,9 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
 
         let borderWidth = dataSet.barBorderWidth
         let borderColor = dataSet.barBorderColor
+        let cornerRadius = dataSet.barCornerRadius
         let drawBorder = borderWidth > 0.0
+        let drawCornerRadius = cornerRadius > 0.0
         
         context.saveGState()
         
@@ -422,14 +434,33 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
                 // Set the color for the currently drawn value. If the index is out of bounds, reuse colors.
                 context.setFillColor(dataSet.color(atIndex: j).cgColor)
             }
-            
-            context.fill(barRect)
-            
+            if drawCornerRadius
+            {
+                let bezierPath = UIBezierPath(roundedRect: barRect, cornerRadius: cornerRadius)
+                context.addPath(bezierPath.cgPath)
+                context.drawPath(using: .fill)
+            }
+            else
+            {
+                context.fill(barRect)
+            }
+
             if drawBorder
             {
                 context.setStrokeColor(borderColor.cgColor)
                 context.setLineWidth(borderWidth)
-                context.stroke(barRect)
+
+                if drawCornerRadius
+                {
+                    let bezierPath = UIBezierPath(roundedRect: barRect, cornerRadius: cornerRadius)
+                    context.addPath(bezierPath.cgPath)
+                    context.drawPath(using: .stroke)
+                }
+                else
+                {
+                    context.stroke(barRect)
+                }
+
             }
 
             // Create and append the corresponding accessibility element to accessibilityOrderedElements
@@ -796,7 +827,7 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
                 else
                 {
                     y1 = e.y
-                    y2 = 0.0
+                    y2 = e.yStart ?? 0.0
                 }
                 
                 prepareBarHighlight(x: e.x, y1: y1, y2: y2, barWidthHalf: barData.barWidth / 2.0, trans: trans, rect: &barRect)
