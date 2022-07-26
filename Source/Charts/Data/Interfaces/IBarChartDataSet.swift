@@ -39,7 +39,16 @@ public protocol IBarChartDataSet: IBarLineScatterCandleBubbleChartDataSet
 
     /// the alpha value (transparency) that is used for drawing the highlight indicator bar. min = 0.0 (fully transparent), max = 1.0 (fully opaque)
     var highlightAlpha: CGFloat { get set }
-    
+
+    /// draws a center line in the highlited bar chart
+    var darwCenterHighlightLine: Bool { get set }
+
+    /// the color of the center highlited bar chart if `nil` then use the highlight color
+    var centerHighlightLineColor: NSUIColor? { get set }
+
+    /// The line width of the center highlited bar chart
+    var centerHighlightLineWidth: CGFloat { get set }
+
     /// array of labels used to describe the different values of the stacked bars
     var stackLabels: [String] { get set }
 }

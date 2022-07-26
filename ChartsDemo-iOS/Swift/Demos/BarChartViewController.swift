@@ -132,6 +132,9 @@ class BarChartViewController: DemoBaseViewController {
             chartView.notifyDataSetChanged()
         } else {
             set1 = BarChartDataSet(entries: yVals, label: "The year 2017")
+            set1.darwCenterHighlightLine = true
+            set1.centerHighlightLineWidth = 3
+            set1.centerHighlightLineColor = UIColor.blue
             set1.colors = ChartColorTemplates.material()
             set1.drawValuesEnabled = false
             set1.barCornerRadius = 6

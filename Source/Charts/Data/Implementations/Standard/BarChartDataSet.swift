@@ -151,6 +151,16 @@ open class BarChartDataSet: BarLineScatterCandleBubbleChartDataSet, IBarChartDat
 
     /// the alpha value (transparency) that is used for drawing the highlight indicator bar. min = 0.0 (fully transparent), max = 1.0 (fully opaque)
     open var highlightAlpha = CGFloat(120.0 / 255.0)
+
+    /// draws a center line in the highlited bar chart
+    open var darwCenterHighlightLine = false
+
+    /// the color of the center highlited bar chart
+    open var centerHighlightLineColor: NSUIColor?
+
+    /// The line width of the center highlited bar chart
+    open var centerHighlightLineWidth = CGFloat(2)
+
     
     // MARK: - NSCopying
     
@@ -165,6 +175,9 @@ open class BarChartDataSet: BarLineScatterCandleBubbleChartDataSet, IBarChartDat
         copy.barBorderWidth = barBorderWidth
         copy.barBorderColor = barBorderColor
         copy.highlightAlpha = highlightAlpha
+        copy.darwCenterHighlightLine = darwCenterHighlightLine
+        copy.centerHighlightLineColor = centerHighlightLineColor
+        copy.centerHighlightLineWidth = centerHighlightLineWidth
         return copy
     }
 }

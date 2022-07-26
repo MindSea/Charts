@@ -829,12 +829,32 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
                     y1 = e.y
                     y2 = e.yStart ?? 0.0
                 }
-                
+
                 prepareBarHighlight(x: e.x, y1: y1, y2: y2, barWidthHalf: barData.barWidth / 2.0, trans: trans, rect: &barRect)
                 
                 setHighlightDrawPos(highlight: high, barRect: barRect)
                 
                 context.fill(barRect)
+
+                if set.darwCenterHighlightLine {
+                    // darw a Line while skipping the bar area
+                    let centerPoint = trans.pixelForValues(x: e.x, y: e.y)
+                    let barStartPoint = trans.pixelForValues(x: e.x, y: e.y)
+                    let barEndPoint = trans.pixelForValues(x: e.x, y: e.yStart ?? 0)
+
+                    let startPoint = CGPoint(x: centerPoint.x, y: viewPortHandler.contentTop)
+                    let endPoint = CGPoint(x: centerPoint.x, y: viewPortHandler.contentBottom)
+
+                    context.setStrokeColor(set.centerHighlightLineColor?.cgColor ?? set.highlightColor.cgColor)
+                    context.setAlpha(set.highlightAlpha)
+                    context.setLineWidth(set.centerHighlightLineWidth)
+                    context.beginPath()
+                    context.move(to: startPoint)
+                    context.addLine(to: barStartPoint)
+                    context.move(to: barEndPoint)
+                    context.addLine(to: endPoint)
+                    context.strokePath()
+                }
             }
         }
         
