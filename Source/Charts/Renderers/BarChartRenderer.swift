@@ -119,23 +119,15 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
             {
                 let left = CGFloat(x - barWidthHalf)
                 let right = CGFloat(x + barWidthHalf)
-                var top: CGFloat
-                var bottom: CGFloat
-                if let yStart = e.yStart {
-                    top = isInverted
-                        ? (y <= 0.0 ? CGFloat(y) : 0)
-                        : (y >= 0.0 ? CGFloat(y) : 0)
-                    bottom = isInverted
-                        ? (y >= 0.0 ? CGFloat(y) : 0)
-                        : (y <= 0.0 ? CGFloat(y) : yStart)
-                } else {
-                    top = isInverted
-                        ? (y <= 0.0 ? CGFloat(y) : 0)
-                        : (y >= 0.0 ? CGFloat(y) : 0)
-                    bottom = isInverted
-                        ? (y >= 0.0 ? CGFloat(y) : 0)
-                        : (y <= 0.0 ? CGFloat(y) : 0)
-                }
+
+                let yStart = e.yStart
+                var top: CGFloat = isInverted
+                    ? (y <= 0.0 ? CGFloat(y) : yStart ?? 0)
+                    : (y >= 0.0 ? CGFloat(y) : yStart ?? 0)
+                var bottom: CGFloat = isInverted
+                    ? (y >= 0.0 ? CGFloat(y) : yStart ?? 0)
+                    : (y <= 0.0 ? CGFloat(y) : yStart ?? 0)
+
                 /* When drawing each bar, the renderer actually draws each bar from 0 to the required value.
                  * This drawn bar is then clipped to the visible chart rect in BarLineChartViewBase's draw(rect:) using clipDataToContent.
                  * While this works fine when calculating the bar rects for drawing, it causes the accessibilityFrames to be oversized in some cases.
@@ -826,8 +818,16 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
                 }
                 else
                 {
-                    y1 = e.y
-                    y2 = e.yStart ?? 0.0
+                    let isInverted = dataProvider.isInverted(axis: set.axisDependency)
+                    let yStart = e.yStart
+                    let y = e.y
+
+                    y2 = isInverted
+                        ? (y <= 0.0 ? CGFloat(y) : yStart ?? 0)
+                        : (y >= 0.0 ? CGFloat(y) : yStart ?? 0)
+                    y1 = isInverted
+                        ? (y >= 0.0 ? CGFloat(y) : yStart ?? 0)
+                        : (y <= 0.0 ? CGFloat(y) : yStart ?? 0)
                 }
 
                 prepareBarHighlight(x: e.x, y1: y1, y2: y2, barWidthHalf: barData.barWidth / 2.0, trans: trans, rect: &barRect)
