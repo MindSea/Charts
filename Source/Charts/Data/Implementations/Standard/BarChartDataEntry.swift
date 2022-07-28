@@ -38,10 +38,7 @@ open class BarChartDataEntry: ChartDataEntry
     /// bar which is not inverted and is `y >= 0`. only abs value of `yStart` is taken
     @objc public init(x: Double, y: Double, yStart: Double)
     {
-        self.yStart = abs(yStart)
-        if yStart > y {
-            fatalError("`yStart` cannot be greator than `y`")
-        }
+        self.yStart = yStart
         super.init(x: x, y: y)
     }
 
