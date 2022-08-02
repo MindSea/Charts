@@ -135,6 +135,7 @@ class BarChartViewController: DemoBaseViewController {
             set1.darwCenterHighlightLine = true
             set1.centerHighlightLineWidth = 3
             set1.centerHighlightLineColor = UIColor.blue
+            set1.centerHighlightLineBottomOffset = 4
             set1.colors = ChartColorTemplates.material()
             set1.drawValuesEnabled = false
             set1.barCornerRadius = 6

@@ -42,6 +42,9 @@ public protocol IBarChartDataSet: IBarLineScatterCandleBubbleChartDataSet
 
     /// draws a center line in the highlited bar chart
     var darwCenterHighlightLine: Bool { get set }
+    
+    /// draws a center line in the highlited bar chart
+    var centerHighlightLineBottomOffset: CGFloat { get set }
 
     /// the color of the center highlited bar chart if `nil` then use the highlight color
     var centerHighlightLineColor: NSUIColor? { get set }

@@ -160,6 +160,9 @@ open class BarChartDataSet: BarLineScatterCandleBubbleChartDataSet, IBarChartDat
 
     /// The line width of the center highlited bar chart
     open var centerHighlightLineWidth = CGFloat(2)
+    
+    /// The bottom offset of the center highlited bar chart
+    open var centerHighlightLineBottomOffset = CGFloat(0)
 
     
     // MARK: - NSCopying
@@ -178,6 +181,7 @@ open class BarChartDataSet: BarLineScatterCandleBubbleChartDataSet, IBarChartDat
         copy.darwCenterHighlightLine = darwCenterHighlightLine
         copy.centerHighlightLineColor = centerHighlightLineColor
         copy.centerHighlightLineWidth = centerHighlightLineWidth
+        copy.centerHighlightLineBottomOffset = centerHighlightLineBottomOffset
         return copy
     }
 }

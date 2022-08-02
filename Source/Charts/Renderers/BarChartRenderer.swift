@@ -843,7 +843,7 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
                     let barEndPoint = trans.pixelForValues(x: e.x, y: e.yStart ?? 0)
 
                     let startPoint = CGPoint(x: centerPoint.x, y: viewPortHandler.contentTop)
-                    let endPoint = CGPoint(x: centerPoint.x, y: viewPortHandler.contentBottom)
+                    let endPoint = CGPoint(x: centerPoint.x, y: viewPortHandler.contentBottom - set.centerHighlightLineBottomOffset)
 
                     context.setStrokeColor(set.centerHighlightLineColor?.cgColor ?? set.highlightColor.cgColor)
                     context.setAlpha(set.highlightAlpha)
